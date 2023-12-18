@@ -110,12 +110,12 @@ namespace database
             Statement select(session);
             std::vector<Item> result;
             Item a;
-            std::string sharding_hint = database::Database::sharding_hint(from, to);
-            std::string select_str = "SELECT id, name, category, description, price FROM Item";
-            select_str += sharding_hint;
-            std::cout << select_str << std::endl;
+            // std::string sharding_hint = database::Database::sharding_hint();
+            // std::string select_str = "SELECT id, name, category, description, price FROM Item";
+            // select_str += sharding_hint;
+            // std::cout << select_str << std::endl;
 
-            select << select_str,
+            select << "SELECT id, name, category, description, price FROM Item",
                 into(a._id),
                 into(a._name),
                 into(a._category),

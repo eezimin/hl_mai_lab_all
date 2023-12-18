@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(hl_server C CXX)
+project(hl_mai_lab_all C CXX)
 
 SET (EXAMPLE_BINARY "hl_mai_lab_all")
 SET (CART_SERVICE "cart_service")
 SET (ITEM_SERVICE "item_service")
+SET (WRITER_BINARY  "event_writer")
 
 find_package(OpenSSL)
 find_package(Threads)
@@ -40,6 +41,26 @@ target_link_libraries(${EXAMPLE_BINARY} PRIVATE
                              "PocoDataMySQL"
                              "mysqlclient"
                              ZLIB::ZLIB)
+
+add_executable(${WRITER_BINARY} writer_main.cpp 
+                                 config/config.cpp 
+                                 database/cache.cpp
+                                 database/database.cpp
+                                 database/user.cpp)
+
+target_include_directories(${WRITER_BINARY} PRIVATE "${CMAKE_BINARY_DIR}")                                 
+
+target_link_libraries(${WRITER_BINARY} PRIVATE 
+                             ${CMAKE_THREAD_LIBS_INIT} 
+                             ${Poco_LIBRARIES}
+                             "PocoData"
+                             "PocoDataMySQL"
+                             "rdkafka++"
+                             CppKafka::cppkafka
+                             ZLIB::ZLIB)
+
+set_target_properties(${WRITER_BINARY} PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${WRITER_BINARY} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 add_executable(${CART_SERVICE} cart_main.cpp 
                              config/config.cpp 
