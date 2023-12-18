@@ -6,4 +6,4 @@ RUN git clone -b poco-1.11.7-release  https://github.com/pocoproject/poco.git &&
 RUN git clone https://github.com/eezimin/hl_mai_lab_all.git
 RUN sudo ldconfig
 RUN cd hl_mai_lab_all && mkdir build && cd build && cmake  .. && make
-ENTRYPOINT [ "hl_mai_lab_all/build/hl_mai_lab_all" ]
+ENTRYPOINT [ "hl_mai_lab_all/build/item_service" ]
