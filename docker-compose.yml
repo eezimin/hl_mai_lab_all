@@ -96,7 +96,7 @@ services:
       - mai-db-node-ex03
     volumes:
       - proxysql-data:/var/lib/proxysql
-      
+
   proxysql:
     build:
       context: proxysql
@@ -111,20 +111,21 @@ services:
       timeout: 20s
       retries: 5
     depends_on:
-      - db-node-1
-      - db-node-2
-      - db-node-3
+      - mai-db-node-ex01
+      - mai-db-node-ex02
+      - mai-db-node-ex03
 
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning 
-    networks:
-      - arch-network
-    volumes: 
-      - cache:/data
+  # cache:
+  #   image: redis:6.2-alpine
+  #   restart: always
+  #   ports:
+  #     - '6379:6379'
+  #   command: redis-server --save 20 1 --loglevel warning 
+  #   networks:
+  #     - arch-network
+  #   volumes: 
+  #     - cache:/data
+
   kafka1:
       image: 'bitnami/kafka:latest'
       container_name: kafka1
@@ -203,11 +204,11 @@ services:
       - arch-network
     depends_on:
       - proxysql
-      - cache
+      # - cache
       - kafka1
-      - db-node-1
-      - db-node-2
-      - db-node-3
+      - mai-db-node-ex01
+      - mai-db-node-ex02
+      - mai-db-node-ex03
 
   writer:
     build:
@@ -228,11 +229,11 @@ services:
       - arch-network
     depends_on:
       - proxysql
-      - cache
+      # - cache
       - kafka1
-      - db-node-1
-      - db-node-2
-      - db-node-3
+      - mai-db-node-ex01
+      - mai-db-node-ex02
+      - mai-db-node-ex03
 
   item_service:
     build:
@@ -277,6 +278,8 @@ volumes:
   db-node-ex02-data:
   db-node-ex03-data:
   proxysql-data:
+  kafka_volume1:
+  kafka_volume2:
   cache:
 
 networks:
