@@ -96,6 +96,24 @@ services:
       - mai-db-node-ex03
     volumes:
       - proxysql-data:/var/lib/proxysql
+      
+  proxysql:
+    build:
+      context: proxysql
+      dockerfile: Dockerfile
+    container_name: proxysql
+    command: >
+      --initial
+    volumes:
+      - proxysql-data:/var/lib/proxysql
+    healthcheck:
+      test: "/usr/bin/mysql --user=stud --password=stud --execute \"SHOW DATABASES;\""
+      timeout: 20s
+      retries: 5
+    depends_on:
+      - db-node-1
+      - db-node-2
+      - db-node-3
 
   cache:
     image: redis:6.2-alpine
@@ -179,7 +197,6 @@ services:
       - DB_PASSWORD=stud
       - DB_DATABASE=archdb
       - CACHE=cache:6z379
-
     ports:
       - 8080:8080
     networks:
