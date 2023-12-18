@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(hl_server C CXX)
 
-SET (EXAMPLE_BINARY "hl_mai_lab_all")
+SET (EXAMPLE_BINARY "ProjectManagement")
 SET (CART_SERVICE "cart_service")
 SET (ITEM_SERVICE "item_service")
 
@@ -24,7 +24,6 @@ SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(${EXAMPLE_BINARY} user_main.cpp 
-                                 database/cache.cpp
                                  config/config.cpp 
                                  database/database.cpp
                                  database/user.cpp)

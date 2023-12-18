@@ -1,7 +1,6 @@
 #include "user.h"
 #include "database.h"
 #include "../config/config.h"
-#include "../database/cache.h"
 
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/MySQL/MySQLException.h>
@@ -19,7 +18,6 @@ using Poco::Data::Statement;
 
 namespace database
 {
-
     void User::init()
     {
         try
@@ -49,32 +47,6 @@ namespace database
             std::cout << "statement:" << e.what() << std::endl;
             throw;
         }
-    }
-
-std::optional<User> User::read_from_cache_by_id(long id)
-    {
-
-        try
-        {
-            std::string result;
-            if (database::Cache::get().get(id, result))
-                return fromJSON(result);
-            else
-                return std::optional<User>();
-        }
-        catch (std::exception& err)
-        {
-           // std::cerr << "error:" << err.what() << std::endl;
-            return std::optional<User>();
-        }
-    }
-
-     void User::save_to_cache()
-    {
-        std::stringstream ss;
-        Poco::JSON::Stringifier::stringify(toJSON(), ss);
-        std::string message = ss.str();
-        database::Cache::get().put(_id, message);
     }
 
     Poco::JSON::Object::Ptr User::toJSON() const
@@ -139,6 +111,7 @@ std::optional<User> User::read_from_cache_by_id(long id)
         }
         return {};
     }
+    
     std::optional<User> User::read_by_id(long id)
     {
         try
@@ -156,6 +129,7 @@ std::optional<User> User::read_from_cache_by_id(long id)
                 into(a._password),
                 use(id),
                 range(0, 1); //  iterate over result set one row at a time
+
             select.execute();
             Poco::Data::RecordSet rs(select);
             if (rs.moveFirst()) return a;
@@ -167,9 +141,7 @@ std::optional<User> User::read_from_cache_by_id(long id)
         }
         catch (Poco::Data::MySQL::StatementException &e)
         {
-
-            std::cout << "statement:" << e.what() << std::endl;
-            
+            std::cout << "statement:" << e.what() << std::endl; 
         }
         return {};
     }
